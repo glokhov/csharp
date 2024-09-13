@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BAF4B20F-055
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{47051A37-A081-4907-8DDA-A2B5FF5ECA76}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Foo", "src\Foo\Foo.fsproj", "{4917BF37-253D-4F02-8665-44A8A8C0CDEC}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Func", "src\Func\Func.fsproj", "{4917BF37-253D-4F02-8665-44A8A8C0CDEC}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Foo.Tests", "test\Foo.Tests\Foo.Tests.fsproj", "{A7B52E55-95D4-4EF7-AAAA-97C84D3D0DCD}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Func.Tests", "test\Func.Tests\Func.Tests.fsproj", "{A7B52E55-95D4-4EF7-AAAA-97C84D3D0DCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,6 +3,8 @@
 bin
 obj
 
+*.user
+
 .fake
 .idea
 .vs
