@@ -3,9 +3,9 @@ namespace Foo
 module Func =
     let invoke func arg =
         try
-            let res = func arg
-            Ok res
-        with ex -> Error ex
+            Ok <| func arg
+        with ex ->
+            Error ex
 
     let invoke2 func arg1 arg2 =
         invoke func (arg1, arg2)
