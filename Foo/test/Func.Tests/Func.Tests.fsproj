@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Func\Func.fsproj" />
-    <ProjectReference Include="..\Assets\Assets.csproj" />
+    <ProjectReference Include="..\Func.CSharp\Func.CSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
