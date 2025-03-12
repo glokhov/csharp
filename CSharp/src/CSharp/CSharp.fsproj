@@ -4,7 +4,7 @@
         <Authors>Gennadiy Lokhov</Authors>
         <Copyright>Copyright © Gennadiy Lokhov</Copyright>
         <Description>Simple FSharp wrapper for CSharp methods, which can throw an Exception</Description>
-        <PackageId>CSharp.Wrapper</PackageId>
+        <PackageId>CSharp.FSharp</PackageId>
         <PackageTags>fsharp;csharp;wrapper</PackageTags>
         <PackageProjectUrl>https://github.com/glokhov/csharp</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

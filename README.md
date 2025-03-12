@@ -1,7 +1,7 @@
-# CSharp function wrapper [![Nuget Version](https://img.shields.io/nuget/v/CSharp.Wrapper)](https://www.nuget.org/packages/CSharp.Wrapper)
+# CSharp function wrapper [![Nuget Version](https://img.shields.io/nuget/v/CSharp.FSharp)](https://www.nuget.org/packages/CSharp.FSharp)
 Simple FSharp wrapper for CSharp methods which can throw an Exception.
 ## Getting started
-Import ```CSharp``` module.
+Import ```CSharp``` module:
 ```fsharp
 open CSharp
 ```
