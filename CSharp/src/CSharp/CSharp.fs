@@ -1,4 +1,4 @@
-module Func.CSharp
+﻿module CSharp
 
 let invoke func arg =
     try

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/csharp/">
+    <Project Path="CSharp\csharp\CSharp.Functions\CSharp.Functions.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="CSharp\src\CSharp\CSharp.fsproj" Type="Classic F#" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="CSharp\test\CSharp.Tests\CSharp.Tests.fsproj" Type="Classic F#" />
+  </Folder>
+</Solution>

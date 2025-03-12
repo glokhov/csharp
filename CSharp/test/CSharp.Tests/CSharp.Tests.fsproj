@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="xunit.v3" Version="2.0.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" />
+        <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\csharp\CSharp.Functions\CSharp.Functions.csproj" />
+        <ProjectReference Include="..\..\src\CSharp\CSharp.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="ErrorTests.fs" />
+      <Compile Include="OkTests.fs" />
+    </ItemGroup>
+</Project>

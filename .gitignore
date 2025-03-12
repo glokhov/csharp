@@ -1,10 +1,11 @@
 .DS_Store
 
+.idea
+.vs
+
 bin
 obj
 
-*.user
+test-results
 
-.fake
-.idea
-.vs
+*.user
