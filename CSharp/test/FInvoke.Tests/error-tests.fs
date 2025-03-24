@@ -1,8 +1,8 @@
-module ErrorTests
+module Error.Tests
 
-open Xunit
+open FInvoke.Result
 open CSharp
-open CSharp.Functions
+open Xunit
 
 [<Fact>]
 let ``invoke returns error`` () =

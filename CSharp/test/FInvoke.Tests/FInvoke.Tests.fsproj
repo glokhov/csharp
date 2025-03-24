@@ -11,11 +11,12 @@
         <PackageReference Include="coverlet.collector" Version="6.0.4" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\csharp\CSharp.Functions\CSharp.Functions.csproj" />
-        <ProjectReference Include="..\..\src\CSharp\CSharp.fsproj" />
+        <ProjectReference Include="..\..\csharp\CSharp\CSharp.csproj" />
+        <ProjectReference Include="..\..\src\FInvoke\FInvoke.fsproj" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Include="ErrorTests.fs" />
-      <Compile Include="OkTests.fs" />
+      <Compile Include="invoke-tests.fs" />
+      <Compile Include="error-tests.fs" />
+      <Compile Include="ok-tests.fs" />
     </ItemGroup>
 </Project>

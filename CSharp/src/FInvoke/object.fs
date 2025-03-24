@@ -1,10 +1,7 @@
-﻿module CSharp
+module FInvoke.Object
 
-let invoke func arg =
-    try
-        Ok <| func arg
-    with ex ->
-        Error ex
+let invoke func arg=
+    func arg
 
 let invoke2 func arg1 arg2 =
     invoke func (arg1, arg2)

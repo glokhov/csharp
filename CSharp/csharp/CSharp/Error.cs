@@ -1,4 +1,4 @@
-﻿namespace CSharp.Functions;
+﻿namespace CSharp;
 
 public static class Error
 {

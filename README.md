@@ -1,9 +1,9 @@
-# CSharp function wrapper [![Nuget Version](https://img.shields.io/nuget/v/CSharp.FSharp)](https://www.nuget.org/packages/CSharp.FSharp)
-Simple FSharp wrapper for CSharp methods which can throw an Exception.
-## Getting started
-Import ```CSharp``` module:
+# CSharp function wrapper [![Nuget Version](https://img.shields.io/nuget/v/FInvoke)](https://www.nuget.org/packages/FInvoke)
+Simple FSharp wrapper for CSharp methods.
+## Wrapping methods which can throw an Exception.
+Import ```FInvoke.Result``` module.
 ```fsharp
-open CSharp
+open FInvoke.Result
 ```
 Wrapping methods with ```void``` as a return type:
 ```fsharp
@@ -49,5 +49,52 @@ let test () =
     match combine3 "root" "folder" "file.ext" with
     | Ok name -> Debug.Assert(@"root\folder\file.ext" = name)
     | Error error -> Debug.Fail(error.Message)
+```
+And so on...
+
+## Wrapping methods which don't throw an Exception, or you don't care.
+Import ```FInvoke.Object``` module.
+```fsharp
+open FInvoke.Object
+```
+Wrapping methods with ```void``` as a return type:
+```fsharp
+let deleteFile: string -> unit = invoke File.Delete
+
+let result = deleteFile "file.ext"
+
+Debug.Assert(() = result)
+```
+Wrapping methods without arguments:
+```fsharp
+let getRandomFileName: unit -> string = invoke Path.GetRandomFileName
+
+let name = getRandomFileName ()
+
+Debug.Assert(name.Contains("."))
+```
+Wrapping methods with one argument:
+```fsharp
+let getFileName: string -> string = invoke Path.GetFileName
+
+let name = getFileName @"root\file.ext"
+
+Debug.Assert("file.ext" = name)
+```
+Wrapping methods with two arguments:
+```fsharp
+let combine2: string -> string -> string = invoke2 Path.Combine
+
+let name = combine2 "root" "file.ext"
+
+Debug.Assert(@"root\file.ext" = name)
+```
+Wrapping methods with three arguments:
+```fsharp
+let combine3: string -> string -> string -> string = invoke3 Path.Combine
+
+let name = combine3 "root" "folder" "file.ext"
+
+Debug.Assert(@"root\folder\file.ext" = name)
 ```
 And so on...

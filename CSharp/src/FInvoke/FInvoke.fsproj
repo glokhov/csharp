@@ -1,22 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <Authors>Gennadiy Lokhov</Authors>
         <Copyright>Copyright © Gennadiy Lokhov</Copyright>
-        <Description>Simple FSharp wrapper for CSharp methods, which can throw an Exception</Description>
-        <PackageId>CSharp.FSharp</PackageId>
+        <Description>Simple FSharp wrapper for CSharp methods</Description>
+        <PackageId>FInvoke</PackageId>
         <PackageTags>fsharp;csharp;wrapper</PackageTags>
         <PackageProjectUrl>https://github.com/glokhov/csharp</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/glokhov/csharp.git</RepositoryUrl>
-        <Version>0.1.0</Version>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <Version>0.2.0</Version>
     </PropertyGroup>
     <ItemGroup>
         <None Include="../../../README.md" Pack="true" Visible="false" PackagePath="/" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="CSharp.fs" />
+        <Compile Include="object.fs" />
+        <Compile Include="result.fs" />
     </ItemGroup>
 </Project>
