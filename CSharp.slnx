@@ -1,11 +1,13 @@
 <Solution>
-    <Folder Name="/csharp/">
-        <Project Path="CSharp\csharp\CSharp\CSharp.csproj" Type="Classic C#" />
-    </Folder>
-    <Folder Name="/src/">
-        <Project Path="CSharp\src\FInvoke\FInvoke.fsproj" Type="Classic F#" />
-    </Folder>
-    <Folder Name="/test/">
-        <Project Path="CSharp\test\FInvoke.Tests\FInvoke.Tests.fsproj" Type="Classic F#" />
-    </Folder>
+  <Folder Name="/csharp/">
+    <Project Path="CSharp\csharp\CSharp\CSharp.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="CSharp\src\FDocument\FDocument.fsproj" Type="Classic F#" />
+    <Project Path="CSharp\src\FInvoke\FInvoke.fsproj" Type="Classic F#" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="CSharp\test\FDocument.Tests\FDocument.Tests.fsproj" Type="Classic F#" />
+    <Project Path="CSharp\test\FInvoke.Tests\FInvoke.Tests.fsproj" Type="Classic F#" />
+  </Folder>
 </Solution>
