@@ -24,8 +24,4 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-build --collect:"XPlat Code Coverage" --results-directory ./test-results
-      - name: Code Coverage
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: test-results/**/coverage.cobertura.xml
+        run: dotnet test --no-build
