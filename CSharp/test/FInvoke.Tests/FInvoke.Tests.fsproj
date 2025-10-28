@@ -1,24 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
         <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Update="FSharp.Core" Version="9.0.303" />
         <PackageReference Include="xunit.v3" Version="3.1.0" />
     </ItemGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\..\csharp\CSharp\CSharp.csproj" />
         <ProjectReference Include="..\..\src\FInvoke\FInvoke.fsproj" />
     </ItemGroup>
-
     <ItemGroup>
-      <Compile Include="LibraryTests.fs" />
+        <Compile Include="LibraryTests.fs" />
     </ItemGroup>
-
 </Project>

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <Authors>Gennadiy Lokhov</Authors>
@@ -13,13 +12,10 @@
         <RepositoryUrl>https://github.com/glokhov/csharp.git</RepositoryUrl>
         <Version>0.4.0</Version>
     </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Update="FSharp.Core" Version="9.0.303" />
     </ItemGroup>
-
     <ItemGroup>
         <Compile Include="Library.fs" />
     </ItemGroup>
-
 </Project>
