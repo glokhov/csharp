@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <Authors>Gennadiy Lokhov</Authors>
@@ -8,18 +9,17 @@
         <PackageTags>fsharp;csharp;wrapper</PackageTags>
         <PackageProjectUrl>https://github.com/glokhov/csharp</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/glokhov/csharp.git</RepositoryUrl>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <Version>0.2.0</Version>
+        <Version>0.4.0</Version>
     </PropertyGroup>
+
     <ItemGroup>
-        <None Include="../../../README.md" Pack="true" Visible="false" PackagePath="/" />
+        <PackageReference Update="FSharp.Core" Version="9.0.303" />
     </ItemGroup>
+
     <ItemGroup>
-        <Compile Include="object.fs" />
-        <Compile Include="result.fs" />
+        <Compile Include="Library.fs" />
     </ItemGroup>
+
 </Project>
