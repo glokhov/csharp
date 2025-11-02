@@ -4,11 +4,95 @@ open System.IO
 open System.Xml.Linq
 open Xunit
 
+module XNode =
+    open FDocument.XNode
+
+    let xFirst: XNode = XElement("first")
+    let xSecond: XNode = XElement("second")
+    let xThird: XNode = XElement("third")
+    let cNodes: obj array = [| xFirst; xSecond; xThird |]
+    let xNodes: XElement = XElement("nodes", cNodes)
+
+    [<Fact>]
+    let ``if previous node exists previousNode returns the node`` () =
+        let node = xNodes.Element("second")
+        match previousNode node with
+        | Some n -> Assert.Equal("first", (n :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no previous node exists previousNode returns none`` () =
+        let node = xNodes.Element("first")
+        match previousNode node with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``if next node exists nextNode returns the node`` () =
+        let node = xNodes.Element("second")
+        match nextNode node with
+        | Some n -> Assert.Equal("third", (n :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no next node exists nextNode returns none`` () =
+        let node = xNodes.Element("third")
+        match nextNode node with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    let formatted = "<nodes>\n  <first />\n  <second />\n  <third />\n</nodes>"
+    let unformatted = "<nodes><first /><second /><third /></nodes>"
+
+    [<Fact>]
+    let ``toString test`` () =
+        Assert.Equal(formatted, toString xNodes)
+
+    [<Fact>]
+    let ``toString2 test`` () =
+        Assert.Equal(unformatted, toString2 SaveOptions.DisableFormatting xNodes)
+
 module XContainer =
     open FDocument.XContainer
 
     let xRoot: XContainer = XElement("root")
     let xElement: XContainer = XElement("root", XElement("first"), XElement("second"))
+
+    [<Fact>]
+    let ``if multiple nodes firstNode returns first node`` () =
+        match firstNode xElement with
+        | Some a -> Assert.Equal("first", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no nodes firstNode returns none`` () =
+        match firstNode xRoot with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``if multiple nodes lastNode returns last node`` () =
+        match lastNode xElement with
+        | Some a -> Assert.Equal("second", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no nodes lastNode returns none`` () =
+        match lastNode xRoot with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``if nodes exist nodes returns nodes`` () =
+        match nodes xElement |> Seq.toList with
+        | a :: _ -> Assert.Equal("first", (a :?> XElement).Name.LocalName)
+        | [] -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no nodes exist nodes returns empty`` () =
+        match nodes xRoot |> Seq.toList with
+        | _ :: _ -> Assert.Fail()
+        | [] -> ()
 
     [<Fact>]
     let ``if an element exists element returns the element (first)`` () =
@@ -64,13 +148,39 @@ module XContainer =
         | _ :: _ -> Assert.Fail()
         | [] -> ()
 
+    let unformatted = "<root><first /><second /></root>"
+    let formatted = "<root>\n  <first />\n  <second />\n</root>"
+
+    [<Fact>]
+    let ``nextNode test`` () =
+        match nextNode (xElement.FirstNode :?> XElement) with
+        | Some a -> Assert.Equal("second", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``previousNode test`` () =
+        match previousNode (xElement.LastNode :?> XElement)  with
+        | Some a -> Assert.Equal("first", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``toString test`` () =
+        Assert.Equal(formatted, toString xElement)
+
+    [<Fact>]
+    let ``toString2 test`` () =
+        Assert.Equal(unformatted, toString2 SaveOptions.DisableFormatting xElement)
+
 module XElement =
     open FDocument.XElement
 
     let xRoot: XElement = XElement("root", XElement("element"))
     let xFstAttr: XAttribute = XAttribute("first", "First")
     let xSndAttr: XAttribute = XAttribute("second", "Second")
-    let xElement: XElement = XElement("root", [| xFstAttr; xSndAttr |])
+    let xFstElem: XElement = XElement("first")
+    let xSndElem: XElement = XElement("second")
+    let xObjects: obj array = [| xFstAttr; xSndAttr; xFstElem; xSndElem |]
+    let xElement: XElement = XElement("root", xObjects)
 
     [<Fact>]
     let ``if multiple attributes firstAttribute returns first attribute`` () =
@@ -286,6 +396,47 @@ module XElement =
         | e :: _ -> Assert.Equal("element", e.Name.LocalName)
         | [] -> Assert.Fail()
 
+    [<Fact>]
+    let ``firstNode test`` () =
+        match firstNode xRoot with
+        | Some a -> Assert.Equal("element", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``lastNode test`` () =
+        match lastNode xRoot with
+        | Some a -> Assert.Equal("element", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``nodes test`` () =
+        match nodes xRoot |> Seq.toList with
+        | a :: _ -> Assert.Equal("element", (a :?> XElement).Name.LocalName)
+        | [] -> Assert.Fail()
+
+    [<Fact>]
+    let ``nextNode test`` () =
+        match nextNode (xElement.FirstNode :?> XElement) with
+        | Some a -> Assert.Equal("second", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``previousNode test`` () =
+        match previousNode (xElement.LastNode :?> XElement)  with
+        | Some a -> Assert.Equal("first", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    let unformattedNode = "<root><element /></root>"
+    let formattedNode = "<root>\n  <element />\n</root>"
+
+    [<Fact>]
+    let ``toString test`` () =
+        Assert.Equal(formattedNode, toString xRoot)
+
+    [<Fact>]
+    let ``toString2 test`` () =
+        Assert.Equal(unformattedNode, toString2 SaveOptions.DisableFormatting xRoot)
+
 module XDocument =
     open FDocument.XDocument
 
@@ -472,3 +623,32 @@ module XDocument =
         match elements2 (XName.Get("root")) xDocPlusRoot |> Seq.toList with
         | e :: _ -> Assert.Equal("root", e.Name.LocalName)
         | [] -> Assert.Fail()
+
+    [<Fact>]
+    let ``firstNode test`` () =
+        match firstNode xDocPlusRoot with
+        | Some a -> Assert.Equal("root", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``lastNode test`` () =
+        match lastNode xDocPlusRoot with
+        | Some a -> Assert.Equal("root", (a :?> XElement).Name.LocalName)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``nodes test`` () =
+        match nodes xDocPlusRoot |> Seq.toList with
+        | a :: _ -> Assert.Equal("root", (a :?> XElement).Name.LocalName)
+        | [] -> Assert.Fail()
+
+    let unformattedNode = "<root><element /></root>"
+    let formattedNode = "<root>\n  <element />\n</root>"
+
+    [<Fact>]
+    let ``toString test`` () =
+        Assert.Equal(formattedNode, toString xDocPlusDecl)
+
+    [<Fact>]
+    let ``toString2 test`` () =
+        Assert.Equal(unformattedNode, toString2 SaveOptions.DisableFormatting xDocPlusDecl)
