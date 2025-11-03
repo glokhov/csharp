@@ -46,7 +46,7 @@ module XNode =
 
     [<Fact>]
     let ``toString test`` () =
-        Assert.Equal(formatted, toString xNodes)
+        Assert.Equal(formatted, (toString xNodes).Replace("\r\n", "\n"))
 
     [<Fact>]
     let ``toString2 test`` () =
@@ -165,7 +165,7 @@ module XContainer =
 
     [<Fact>]
     let ``toString test`` () =
-        Assert.Equal(formatted, toString xElement)
+        Assert.Equal(formatted, (toString xElement).Replace("\r\n", "\n"))
 
     [<Fact>]
     let ``toString2 test`` () =
@@ -353,7 +353,7 @@ module XElement =
         let temp = Path.GetTempFileName()
 
         match xRoot |> save temp with
-        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp))
+        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp).Replace("\r\n", "\n"))
         | Error e -> Assert.Fail(e.Message)
 
         File.Delete(temp)
@@ -363,7 +363,7 @@ module XElement =
         let temp = Path.GetTempFileName()
 
         match xRoot |> save2 temp SaveOptions.None with
-        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp))
+        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp).Replace("\r\n", "\n"))
         | Error e -> Assert.Fail(e.Message)
 
         File.Delete(temp)
@@ -431,7 +431,7 @@ module XElement =
 
     [<Fact>]
     let ``toString test`` () =
-        Assert.Equal(formattedNode, toString xRoot)
+        Assert.Equal(formattedNode, (toString xRoot).Replace("\r\n", "\n"))
 
     [<Fact>]
     let ``toString2 test`` () =
@@ -581,7 +581,7 @@ module XDocument =
         let temp = Path.GetTempFileName()
 
         match xDocPlusDecl |> save temp with
-        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp))
+        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp).Replace("\r\n", "\n"))
         | Error e -> Assert.Fail(e.Message)
 
         File.Delete(temp)
@@ -591,7 +591,7 @@ module XDocument =
         let temp = Path.GetTempFileName()
 
         match xDocPlusDecl |> save2 temp SaveOptions.None with
-        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp))
+        | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp).Replace("\r\n", "\n"))
         | Error e -> Assert.Fail(e.Message)
 
         File.Delete(temp)
@@ -647,7 +647,7 @@ module XDocument =
 
     [<Fact>]
     let ``toString test`` () =
-        Assert.Equal(formattedNode, toString xDocPlusDecl)
+        Assert.Equal(formattedNode, (toString xDocPlusDecl).Replace("\r\n", "\n"))
 
     [<Fact>]
     let ``toString2 test`` () =
