@@ -72,8 +72,7 @@ module XElement =
 
     let inline parse (text: string) : Result<XElement, exn> = invoke XElement.Parse text
 
-    let inline parse2 (text: string) (options: LoadOptions) : Result<XElement, exn> =
-        invoke2 XElement.Parse text options
+    let inline parse2 (text: string) (options: LoadOptions) : Result<XElement, exn> = invoke2 XElement.Parse text options
 
     let inline load (uri: string) : Result<XElement, exn> =
         let load: string -> Result<XElement, exn> = invoke XElement.Load
@@ -116,8 +115,7 @@ module XDocument =
 
     let inline parse (text: string) : Result<XDocument, exn> = invoke XDocument.Parse text
 
-    let inline parse2 (text: string) (options: LoadOptions) : Result<XDocument, exn> =
-        invoke2 XDocument.Parse text options
+    let inline parse2 (text: string) (options: LoadOptions) : Result<XDocument, exn> = invoke2 XDocument.Parse text options
 
     let inline load (uri: string) : Result<XDocument, exn> =
         let load: string -> Result<XDocument, exn> = invoke XDocument.Load

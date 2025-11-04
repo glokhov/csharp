@@ -27,7 +27,7 @@ module XNode =
 
     [<Fact>]
     let ``if next node exists nextNode returns the node`` () =
-        match nextNode <| xSecond with
+        match nextNode xSecond with
         | Some n -> Assert.Equal(xThird, n)
         | None -> Assert.Fail()
 
