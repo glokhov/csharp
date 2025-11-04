@@ -4,6 +4,88 @@ open System.IO
 open System.Xml.Linq
 open Xunit
 
+module XObject =
+    open FDocument.XObject
+
+    let xElement: XElement = XElement("element")
+    let xChild: XElement = XElement("element")
+    let xRoot: XElement = XElement("root", xChild)
+    let xDocument: XDocument = XDocument(xRoot)
+
+    [<Fact>]
+    let ``if document exists document returns the document`` () =
+        match document xRoot with
+        | Some d -> Assert.Equal(xDocument, d)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no document exists document returns none`` () =
+        match document xElement with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``if parent exists parent returns the parent`` () =
+        match parent xChild with
+        | Some e -> Assert.Equal(xRoot, e)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no parent exists parent returns none`` () =
+        match parent xRoot with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+module XAttribute =
+    open FDocument.XAttribute
+
+    let xFirst: XAttribute = XAttribute("first", "First")
+    let xSecond: XAttribute = XAttribute("second", "Second")
+    let xThird: XAttribute = XAttribute("third", "Third")
+    let cNodes: obj array = [| xFirst; xSecond; xThird |]
+    let xElement: XElement = XElement("root", cNodes)
+
+    [<Fact>]
+    let ``if previous attribute exists previousAttribute returns the attribute`` () =
+        match previousAttribute xSecond with
+        | Some a -> Assert.Equal(xFirst, a)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no previous attribute exists previousAttribute returns none`` () =
+        match previousAttribute xFirst with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``if next attribute exists nextAttribute returns the attribute`` () =
+        match nextAttribute xSecond with
+        | Some a -> Assert.Equal(xThird, a)
+        | None -> Assert.Fail()
+
+    [<Fact>]
+    let ``if no next attribute exists nextAttribute returns none`` () =
+        match nextAttribute xThird with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    let formatted = "first=\"First\""
+
+    [<Fact>]
+    let ``toString test`` () = Assert.Equal(formatted, (toString xFirst))
+
+    [<Fact>]
+    let ``document test`` () =
+        match document xFirst with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``parent test`` () =
+        match parent xFirst with
+        | Some e -> Assert.Equal(xElement, e)
+        | None -> Assert.Fail()
+
 module XNode =
     open FDocument.XNode
 
@@ -11,7 +93,7 @@ module XNode =
     let xSecond: XNode = XElement("second")
     let xThird: XNode = XElement("third")
     let cNodes: obj array = [| xFirst; xSecond; xThird |]
-    let xNodes: XElement = XElement("nodes", cNodes)
+    let xElement: XElement = XElement("root", cNodes)
 
     [<Fact>]
     let ``if previous node exists previousNode returns the node`` () =
@@ -37,16 +119,28 @@ module XNode =
         | Some _ -> Assert.Fail()
         | None -> ()
 
-    let formatted = "<nodes>\n  <first />\n  <second />\n  <third />\n</nodes>"
-    let unformatted = "<nodes><first /><second /><third /></nodes>"
+    let unformatted = "<root><first /><second /><third /></root>"
+    let formatted = "<root>\n  <first />\n  <second />\n  <third />\n</root>"
 
     [<Fact>]
     let ``toString test`` () =
-        Assert.Equal(formatted, (toString xNodes).Replace("\r\n", "\n"))
+        Assert.Equal(formatted, (toString xElement).Replace("\r\n", "\n"))
 
     [<Fact>]
     let ``toString2 test`` () =
-        Assert.Equal(unformatted, toString2 SaveOptions.DisableFormatting xNodes)
+        Assert.Equal(unformatted, toString2 SaveOptions.DisableFormatting xElement)
+
+    [<Fact>]
+    let ``document test`` () =
+        match document xFirst with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``parent test`` () =
+        match parent xFirst with
+        | Some e -> Assert.Equal(xElement, e)
+        | None -> Assert.Fail()
 
 module XContainer =
     open FDocument.XContainer
@@ -145,29 +239,6 @@ module XContainer =
         match elements2 (XName.Get("foo")) xRoot |> Seq.toList with
         | _ :: _ -> Assert.Fail()
         | [] -> ()
-
-    let unformatted = "<root><first /><second /></root>"
-    let formatted = "<root>\n  <first />\n  <second />\n</root>"
-
-    [<Fact>]
-    let ``nextNode test`` () =
-        match nextNode xFirst with
-        | Some n -> Assert.Equal(xSecond, n :?> XElement)
-        | None -> Assert.Fail()
-
-    [<Fact>]
-    let ``previousNode test`` () =
-        match previousNode xSecond with
-        | Some n -> Assert.Equal(xFirst, n :?> XElement)
-        | None -> Assert.Fail()
-
-    [<Fact>]
-    let ``toString test`` () =
-        Assert.Equal(formatted, (toString xElement).Replace("\r\n", "\n"))
-
-    [<Fact>]
-    let ``toString2 test`` () =
-        Assert.Equal(unformatted, toString2 SaveOptions.DisableFormatting xElement)
 
 module XElement =
     open FDocument.XElement
@@ -344,11 +415,8 @@ module XElement =
 
         File.Delete(temp)
 
-    let formatted =
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n  <element />\n</root>"
-
-    let unformatted =
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><element /></root>"
+    let unformatted = "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><element /></root>"
+    let formatted = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n  <element />\n</root>"
 
     [<Fact>]
     let ``save successful`` () =
@@ -438,6 +506,18 @@ module XElement =
     [<Fact>]
     let ``toString2 test`` () =
         Assert.Equal(unformattedNode, toString2 SaveOptions.DisableFormatting xRoot)
+
+    [<Fact>]
+    let ``document test`` () =
+        match document xElement with
+        | Some _ -> Assert.Fail()
+        | None -> ()
+
+    [<Fact>]
+    let ``parent test`` () =
+        match parent xElement with
+        | Some e -> Assert.Equal(xRoot, e)
+        | None -> Assert.Fail()
 
 module XDocument =
     open FDocument.XDocument
@@ -575,11 +655,8 @@ module XDocument =
 
         File.Delete(temp)
 
-    let unformatted =
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><element /></root>"
-
-    let formatted =
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n  <element />\n</root>"
+    let unformatted = "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><element /></root>"
+    let formatted = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n  <element />\n</root>"
 
     [<Fact>]
     let ``save successful`` () =

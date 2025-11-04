@@ -9,6 +9,24 @@ module private Option =
         | null -> None
         | v -> Some v
 
+module XObject =
+    let inline document (obj: XObject) : XDocument option = obj.Document |> Option.some
+
+    let inline parent (obj: XObject) : XElement option = obj.Parent |> Option.some
+
+module XAttribute =
+    let inline nextAttribute (attribute: XAttribute) : XAttribute option = attribute.NextAttribute |> Option.some
+
+    let inline previousAttribute (attribute: XAttribute) : XAttribute option = attribute.PreviousAttribute |> Option.some
+
+    let inline toString (attribute: XAttribute) : string = attribute.ToString()
+
+    // XObject
+
+    let inline document (attribute: XAttribute) : XDocument option = XObject.document attribute
+
+    let inline parent (attribute: XAttribute) : XElement option = XObject.parent attribute
+
 module XNode =
     let inline nextNode (node: XNode) : XNode option = node.NextNode |> Option.some
 
@@ -18,15 +36,13 @@ module XNode =
 
     let inline toString2 (options: SaveOptions) (node: XNode) : string = node.ToString(options)
 
+    // XObject
+
+    let inline document (node: XNode) : XDocument option = XObject.document node
+
+    let inline parent (node: XNode) : XElement option = XObject.parent node
+
 module XContainer =
-    let inline nextNode (container: XContainer) : XNode option = XNode.nextNode container
-
-    let inline previousNode (container: XContainer) : XNode option = XNode.previousNode container
-
-    let inline toString (container: XContainer) : string = XNode.toString container
-
-    let inline toString2 (options: SaveOptions) (container: XContainer) : string = XNode.toString2 options container
-
     let inline firstNode (container: XContainer) : XNode option = container.FirstNode |> Option.some
 
     let inline lastNode (container: XContainer) : XNode option = container.LastNode |> Option.some
@@ -40,26 +56,6 @@ module XContainer =
     let inline elements2 (name: XName) (container: XContainer) : XElement seq = container.Elements(name)
 
 module XElement =
-    let inline nextNode (element: XElement) : XNode option = XNode.nextNode element
-
-    let inline previousNode (element: XElement) : XNode option = XNode.previousNode element
-
-    let inline toString (element: XElement) : string = XNode.toString element
-
-    let inline toString2 (options: SaveOptions) (element: XElement) : string = XNode.toString2 options element
-
-    let inline firstNode (element: XElement) : XNode option = XContainer.firstNode element
-
-    let inline lastNode (element: XElement) : XNode option = XContainer.lastNode element
-
-    let inline nodes (element: XElement) : XNode seq = XContainer.nodes element
-
-    let inline element (name: XName) (element: XElement) : XElement option = XContainer.element name element
-
-    let inline elements (element: XElement) : XElement seq = XContainer.elements element
-
-    let inline elements2 (name: XName) (element: XElement) : XElement seq = XContainer.elements2 name element
-
     let inline firstAttribute (element: XElement) : XAttribute option = element.FirstAttribute |> Option.some
 
     let inline lastAttribute (element: XElement) : XAttribute option = element.LastAttribute |> Option.some
@@ -90,23 +86,37 @@ module XElement =
         let save: string -> SaveOptions -> Result<unit, exn> = invoke2 element.Save
         save filename options
 
+    // XContainer
+
+    let inline firstNode (element: XElement) : XNode option = XContainer.firstNode element
+
+    let inline lastNode (element: XElement) : XNode option = XContainer.lastNode element
+
+    let inline nodes (element: XElement) : XNode seq = XContainer.nodes element
+
+    let inline element (name: XName) (element: XElement) : XElement option = XContainer.element name element
+
+    let inline elements (element: XElement) : XElement seq = XContainer.elements element
+
+    let inline elements2 (name: XName) (element: XElement) : XElement seq = XContainer.elements2 name element
+
+    // XNode
+
+    let inline nextNode (element: XElement) : XNode option = XNode.nextNode element
+
+    let inline previousNode (element: XElement) : XNode option = XNode.previousNode element
+
+    let inline toString (element: XElement) : string = XNode.toString element
+
+    let inline toString2 (options: SaveOptions) (element: XElement) : string = XNode.toString2 options element
+
+    // XObject
+
+    let inline document (element: XElement) : XDocument option = XObject.document element
+
+    let inline parent (element: XElement) : XElement option = XObject.parent element
+
 module XDocument =
-    let inline toString (document: XDocument) : string = XNode.toString document
-
-    let inline toString2 (options: SaveOptions) (document: XDocument) : string = XNode.toString2 options document
-
-    let inline firstNode (document: XDocument) : XNode option = XContainer.firstNode document
-
-    let inline lastNode (document: XDocument) : XNode option = XContainer.lastNode document
-
-    let inline nodes (document: XDocument) : XNode seq = XContainer.nodes document
-
-    let inline element (name: XName) (document: XDocument) : XElement option = XContainer.element name document
-
-    let inline elements (document: XDocument) : XElement seq = XContainer.elements document
-
-    let inline elements2 (name: XName) (document: XDocument) : XElement seq = XContainer.elements2 name document
-
     let inline root (document: XDocument) : XElement option = document.Root |> Option.some
 
     let inline declaration (document: XDocument) : XDeclaration option = document.Declaration |> Option.some
@@ -132,3 +142,23 @@ module XDocument =
     let inline save2 (filename: string) (options: SaveOptions) (document: XDocument) : Result<unit, exn> =
         let save: string -> SaveOptions -> Result<unit, exn> = invoke2 document.Save
         save filename options
+
+    // XContainer
+
+    let inline firstNode (document: XDocument) : XNode option = XContainer.firstNode document
+
+    let inline lastNode (document: XDocument) : XNode option = XContainer.lastNode document
+
+    let inline nodes (document: XDocument) : XNode seq = XContainer.nodes document
+
+    let inline element (name: XName) (document: XDocument) : XElement option = XContainer.element name document
+
+    let inline elements (document: XDocument) : XElement seq = XContainer.elements document
+
+    let inline elements2 (name: XName) (document: XDocument) : XElement seq = XContainer.elements2 name document
+
+    // XNode
+
+    let inline toString (document: XDocument) : string = XNode.toString document
+
+    let inline toString2 (options: SaveOptions) (document: XDocument) : string = XNode.toString2 options document
