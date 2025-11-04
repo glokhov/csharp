@@ -1,4 +1,4 @@
-# C# function wrapper [![Nuget Version](https://img.shields.io/nuget/v/FInvoke)](https://www.nuget.org/packages/FInvoke)
+# C# methods wrapper [![Nuget Version](https://img.shields.io/nuget/v/FInvoke)](https://www.nuget.org/packages/FInvoke)
 Simple F# wrapper for C# methods.
 ## Wrapping methods which can throw an Exception.
 Import ```FInvoke.Result``` module.

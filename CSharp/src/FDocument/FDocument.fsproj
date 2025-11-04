@@ -8,15 +8,17 @@
         <PackageTags>fsharp;csharp;wrapper</PackageTags>
         <PackageProjectUrl>https://github.com/glokhov/csharp</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>DOCUMENT.md</PackageReadmeFile>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/glokhov/csharp.git</RepositoryUrl>
         <Version>0.1.0</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Update="FSharp.Core" Version="9.0.303" />
+        <PackageReference Include="FInvoke" Version="0.4.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\FInvoke\FInvoke.fsproj" />
+        <None Include="../../../DOCUMENT.md" Pack="true" Visible="false" PackagePath="/" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Library.fs" />
