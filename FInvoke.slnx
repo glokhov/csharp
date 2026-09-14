@@ -1,0 +1,11 @@
+<Solution>
+    <Folder Name="/src/">
+        <Project Path="FInvoke/src/FDocument/FDocument.fsproj" />
+        <Project Path="FInvoke/src/FInvoke/FInvoke.fsproj" />
+    </Folder>
+    <Folder Name="/test/">
+        <Project Path="FInvoke/test/CSharp/CSharp.csproj" />
+        <Project Path="FInvoke/test/FDocument.Tests/FDocument.Tests.fsproj" />
+        <Project Path="FInvoke/test/FInvoke.Tests/FInvoke.Tests.fsproj" />
+    </Folder>
+</Solution>

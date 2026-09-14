@@ -2,7 +2,7 @@ namespace FInvoke
 
 module Result =
     let inline invoke func arg =
-        try Ok <| func arg with ex -> Error ex
+        try Ok (func arg) with ex -> Error ex
 
     let inline invoke2 func arg1 arg2 =
         invoke func (arg1, arg2)
@@ -50,7 +50,7 @@ module Result =
         invoke func (arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)
 
 module Object =
-    let inline invoke func arg=
+    let inline invoke func arg =
         func arg
 
     let inline invoke2 func arg1 arg2 =

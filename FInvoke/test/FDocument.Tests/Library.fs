@@ -2,7 +2,20 @@ namespace FDocument.Tests
 
 open System.IO
 open System.Xml.Linq
+open FDocument.XElement
 open Xunit
+
+[<AutoOpen>]
+module Utils =
+    let inline value (element: XElement | null) =
+        match element with
+        | null -> failwith "Element is null"
+        | e -> e.Value
+
+    let inline localName (element: XElement | null) =
+        match element with
+        | null -> failwith "Element is null"
+        | e -> e.Name.LocalName
 
 module XObject =
     open FDocument.XObject
@@ -128,7 +141,7 @@ module XNode =
 
     [<Fact>]
     let ``toString2 test`` () =
-        Assert.Equal(unformatted, toString2 SaveOptions.DisableFormatting xElement)
+        Assert.Equal(unformatted, toStringWithOptions SaveOptions.DisableFormatting xElement)
 
     [<Fact>]
     let ``document test`` () =
@@ -224,25 +237,23 @@ module XContainer =
 
     [<Fact>]
     let ``if an element exists elements2 returns the element`` () =
-        match elements2 (XName.Get("first")) xElement |> Seq.toList with
+        match elementsByName (XName.Get("first")) xElement |> Seq.toList with
         | e :: _ -> Assert.Equal(xFirst, e)
         | [] -> Assert.Fail()
 
     [<Fact>]
     let ``if no element exists elements2 returns empty`` () =
-        match elements2 (XName.Get("foo")) xElement |> Seq.toList with
+        match elementsByName (XName.Get("foo")) xElement |> Seq.toList with
         | _ :: _ -> Assert.Fail()
         | [] -> ()
 
     [<Fact>]
     let ``if no elements exist elements2 returns empty`` () =
-        match elements2 (XName.Get("foo")) xRoot |> Seq.toList with
+        match elementsByName (XName.Get("foo")) xRoot |> Seq.toList with
         | _ :: _ -> Assert.Fail()
         | [] -> ()
 
 module XElement =
-    open FDocument.XElement
-
     let xElement: XElement = XElement("element")
     let xRoot: XElement = XElement("root", xElement)
     let xFstAttr: XAttribute = XAttribute("first", "First")
@@ -314,19 +325,19 @@ module XElement =
 
     [<Fact>]
     let ``if an attribute exists attributes2 returns the attribute`` () =
-        match attributes2 (XName.Get("first")) xRootPlusObjects |> Seq.toList with
+        match attributesByName (XName.Get("first")) xRootPlusObjects |> Seq.toList with
         | a :: _ -> Assert.Equal(xFstAttr, a)
         | [] -> Assert.Fail()
 
     [<Fact>]
     let ``if no attribute exists attributes2 returns empty`` () =
-        match attributes2 (XName.Get("foo")) xRootPlusObjects |> Seq.toList with
+        match attributesByName (XName.Get("foo")) xRootPlusObjects |> Seq.toList with
         | _ :: _ -> Assert.Fail()
         | [] -> ()
 
     [<Fact>]
     let ``if no attributes exist attributes2 returns empty`` () =
-        match attributes2 (XName.Get("foo")) xRoot |> Seq.toList with
+        match attributesByName (XName.Get("foo")) xRoot |> Seq.toList with
         | _ :: _ -> Assert.Fail()
         | [] -> ()
 
@@ -344,19 +355,19 @@ module XElement =
 
     [<Fact>]
     let ``if load options none parse2 returns ok`` () =
-        match parse2 "<root> </root>" LoadOptions.None with
+        match parseWithOptions LoadOptions.None "<root> </root>" with
         | Ok e -> Assert.Equal("", e.Value)
         | Error e -> Assert.Fail(e.Message)
 
     [<Fact>]
     let ``if load options whitespaces parse2 returns ok`` () =
-        match parse2 "<root> </root>" LoadOptions.PreserveWhitespace with
+        match parseWithOptions LoadOptions.PreserveWhitespace "<root> </root>" with
         | Ok e -> Assert.Equal(" ", e.Value)
         | Error e -> Assert.Fail(e.Message)
 
     [<Fact>]
     let ``if element invalid parse2 returns error`` () =
-        match parse2 "" LoadOptions.None with
+        match parseWithOptions LoadOptions.None "" with
         | Ok _ -> Assert.Fail()
         | Error e -> Assert.Equal("Root element is missing.", e.Message)
 
@@ -387,7 +398,7 @@ module XElement =
         let temp = Path.GetTempFileName()
         File.WriteAllText(temp, "<root> </root>")
 
-        match load2 temp LoadOptions.None with
+        match loadWithOptions LoadOptions.None temp with
         | Ok e -> Assert.Equal("", e.Value)
         | Error e -> Assert.Fail(e.Message)
 
@@ -398,7 +409,7 @@ module XElement =
         let temp = Path.GetTempFileName()
         File.WriteAllText(temp, "<root> </root>")
 
-        match load2 temp LoadOptions.PreserveWhitespace with
+        match loadWithOptions LoadOptions.PreserveWhitespace temp with
         | Ok e -> Assert.Equal(" ", e.Value)
         | Error e -> Assert.Fail(e.Message)
 
@@ -409,7 +420,7 @@ module XElement =
         let temp = Path.GetTempFileName()
         File.WriteAllText(temp, "")
 
-        match load2 temp LoadOptions.None with
+        match loadWithOptions LoadOptions.None temp with
         | Ok _ -> Assert.Fail()
         | Error e -> Assert.Equal("Root element is missing.", e.Message)
 
@@ -432,7 +443,7 @@ module XElement =
     let ``save options none save2`` () =
         let temp = Path.GetTempFileName()
 
-        match xRoot |> save2 temp SaveOptions.None with
+        match xRoot |> saveWithOptions SaveOptions.None temp with
         | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp).Replace("\r\n", "\n"))
         | Error e -> Assert.Fail(e.Message)
 
@@ -442,7 +453,7 @@ module XElement =
     let ``save options formating save2`` () =
         let temp = Path.GetTempFileName()
 
-        match xRoot |> save2 temp SaveOptions.DisableFormatting with
+        match xRoot |> saveWithOptions SaveOptions.DisableFormatting temp with
         | Ok _ -> Assert.Equal(unformatted, File.ReadAllText(temp))
         | Error e -> Assert.Fail(e.Message)
 
@@ -462,7 +473,7 @@ module XElement =
 
     [<Fact>]
     let ``elements2 test`` () =
-        match elements2 (XName.Get("element")) xRoot |> Seq.toList with
+        match elementsByName (XName.Get("element")) xRoot |> Seq.toList with
         | e :: _ -> Assert.Equal(xElement, e)
         | [] -> Assert.Fail()
 
@@ -505,7 +516,7 @@ module XElement =
 
     [<Fact>]
     let ``toString2 test`` () =
-        Assert.Equal(unformattedNode, toString2 SaveOptions.DisableFormatting xRoot)
+        Assert.Equal(unformattedNode, toStringWithOptions SaveOptions.DisableFormatting xRoot)
 
     [<Fact>]
     let ``document test`` () =
@@ -573,7 +584,7 @@ module XDocument =
     [<Fact>]
     let ``if document valid parse returns ok`` () =
         match parse "<root />" with
-        | Ok d -> Assert.Equal("root", d.Root.Name.LocalName)
+        | Ok d -> Assert.Equal("root", d.Root |> localName)
         | Error e -> Assert.Fail(e.Message)
 
     [<Fact>]
@@ -584,19 +595,19 @@ module XDocument =
 
     [<Fact>]
     let ``if load options none parse2 returns ok`` () =
-        match parse2 "<root> </root>" LoadOptions.None with
-        | Ok d -> Assert.Equal("", d.Root.Value)
+        match parseWithOptions LoadOptions.None "<root> </root>" with
+        | Ok d -> Assert.Equal("", d.Root |> value)
         | Error e -> Assert.Fail(e.Message)
 
     [<Fact>]
     let ``if load options whitespaces parse2 returns ok`` () =
-        match parse2 "<root> </root>" LoadOptions.PreserveWhitespace with
-        | Ok d -> Assert.Equal(" ", d.Root.Value)
+        match parseWithOptions LoadOptions.PreserveWhitespace "<root> </root>" with
+        | Ok d -> Assert.Equal(" ", d.Root |> value)
         | Error e -> Assert.Fail(e.Message)
 
     [<Fact>]
     let ``if document invalid parse2 returns error`` () =
-        match parse2 "" LoadOptions.None with
+        match parseWithOptions LoadOptions.None "" with
         | Ok _ -> Assert.Fail()
         | Error e -> Assert.Equal("Root element is missing.", e.Message)
 
@@ -606,7 +617,7 @@ module XDocument =
         File.WriteAllText(temp, "<root />")
 
         match load temp with
-        | Ok d -> Assert.Equal("root", d.Root.Name.LocalName)
+        | Ok d -> Assert.Equal("root", d.Root |> localName)
         | Error e -> Assert.Fail(e.Message)
 
         File.Delete(temp)
@@ -621,14 +632,14 @@ module XDocument =
         | Error e -> Assert.Equal("Root element is missing.", e.Message)
 
         File.Delete(temp)
-
+    
     [<Fact>]
     let ``if load options none load2 returns ok`` () =
         let temp = Path.GetTempFileName()
         File.WriteAllText(temp, "<root> </root>")
 
-        match load2 temp LoadOptions.None with
-        | Ok d -> Assert.Equal("", d.Root.Value)
+        match loadWithOptions LoadOptions.None temp with
+        | Ok d -> Assert.Equal("", d.Root |> value)
         | Error e -> Assert.Fail(e.Message)
 
         File.Delete(temp)
@@ -638,8 +649,8 @@ module XDocument =
         let temp = Path.GetTempFileName()
         File.WriteAllText(temp, "<root> </root>")
 
-        match load2 temp LoadOptions.PreserveWhitespace with
-        | Ok d -> Assert.Equal(" ", d.Root.Value)
+        match loadWithOptions LoadOptions.PreserveWhitespace temp with
+        | Ok d -> Assert.Equal(" ", d.Root |> value)
         | Error e -> Assert.Fail(e.Message)
 
         File.Delete(temp)
@@ -649,7 +660,7 @@ module XDocument =
         let temp = Path.GetTempFileName()
         File.WriteAllText(temp, "")
 
-        match load2 temp LoadOptions.None with
+        match loadWithOptions LoadOptions.None temp with
         | Ok _ -> Assert.Fail()
         | Error e -> Assert.Equal("Root element is missing.", e.Message)
 
@@ -672,7 +683,7 @@ module XDocument =
     let ``save options none save2`` () =
         let temp = Path.GetTempFileName()
 
-        match xDocPlusDecl |> save2 temp SaveOptions.None with
+        match xDocPlusDecl |> saveWithOptions SaveOptions.None temp with
         | Ok _ -> Assert.Equal(formatted, File.ReadAllText(temp).Replace("\r\n", "\n"))
         | Error e -> Assert.Fail(e.Message)
 
@@ -682,7 +693,7 @@ module XDocument =
     let ``save options formating save2`` () =
         let temp = Path.GetTempFileName()
 
-        match xDocPlusDecl |> save2 temp SaveOptions.DisableFormatting with
+        match xDocPlusDecl |> saveWithOptions SaveOptions.DisableFormatting temp with
         | Ok _ -> Assert.Equal(unformatted, File.ReadAllText(temp))
         | Error e -> Assert.Fail(e.Message)
 
@@ -702,7 +713,7 @@ module XDocument =
 
     [<Fact>]
     let ``elements2 test`` () =
-        match elements2 (XName.Get("root")) xDocPlusRoot |> Seq.toList with
+        match elementsByName (XName.Get("root")) xDocPlusRoot |> Seq.toList with
         | e :: _ -> Assert.Equal(xRoot, e)
         | [] -> Assert.Fail()
 
@@ -733,4 +744,4 @@ module XDocument =
 
     [<Fact>]
     let ``toString2 test`` () =
-        Assert.Equal(unformattedNode, toString2 SaveOptions.DisableFormatting xDocPlusDecl)
+        Assert.Equal(unformattedNode, toStringWithOptions SaveOptions.DisableFormatting xDocPlusDecl)

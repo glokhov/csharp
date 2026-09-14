@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <Authors>Gennadiy Lokhov</Authors>
         <Copyright>Copyright © Gennadiy Lokhov</Copyright>
         <Description>Simple FSharp wrapper for CSharp methods</Description>
@@ -11,13 +13,10 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/glokhov/csharp.git</RepositoryUrl>
-        <Version>0.4.0</Version>
+        <Version>0.5.0</Version>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Update="FSharp.Core" Version="9.0.303" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="../../../README.md" Pack="true" Visible="false" PackagePath="/" />
+        <None Include="../../../README.md" Pack="true" Visible="true" PackagePath="/" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Library.fs" />

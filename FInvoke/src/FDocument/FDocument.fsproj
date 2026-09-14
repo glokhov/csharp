@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <Authors>Gennadiy Lokhov</Authors>
         <Copyright>Copyright © Gennadiy Lokhov</Copyright>
         <Description>Simple FSharp wrapper for XDocument methods</Description>
@@ -8,17 +10,12 @@
         <PackageTags>fsharp;csharp;wrapper</PackageTags>
         <PackageProjectUrl>https://github.com/glokhov/csharp</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>DOCUMENT.md</PackageReadmeFile>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/glokhov/csharp.git</RepositoryUrl>
-        <Version>0.1.0</Version>
+        <Version>0.2.0</Version>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Update="FSharp.Core" Version="9.0.303" />
         <PackageReference Include="FInvoke" Version="0.4.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="../../../DOCUMENT.md" Pack="true" Visible="false" PackagePath="/" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Library.fs" />
