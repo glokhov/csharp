@@ -1,100 +1,84 @@
-# C# methods wrapper [![Nuget Version](https://img.shields.io/nuget/v/FInvoke)](https://www.nuget.org/packages/FInvoke)
-Simple F# wrapper for C# methods.
-## Wrapping methods which can throw an Exception.
-Import ```FInvoke.Result``` module.
+# FInvoke
+
+[![NuGet Version](https://img.shields.io/nuget/v/FInvoke)](https://www.nuget.org/packages/FInvoke)
+[![GitHub License](https://img.shields.io/github/license/glokhov/csharp)](LICENSE)
+
+A tiny F# helper library for invoking .NET and C# methods with a simple, idiomatic API.
+
+FInvoke helps you wrap method calls as functions and optionally capture exceptions as `Result<T, exn>` without writing repetitive `try/with` boilerplate.
+
+## Why use FInvoke?
+
+- Call .NET/C# methods with the same functional style as other F# functions
+- Safely handle exceptions with `Result`
+- Keep direct invocation for cases where exceptions are not important
+- Support methods with up to 16 arguments
+
+## Install
+
+```bash
+dotnet add package FInvoke
+```
+
+## Usage
+
+### Safe invocation with exceptions captured
+
+```fsharp
+open System.IO
+open FInvoke.Result
+
+let deleteFile =
+    match invoke File.Delete "file.ext" with
+    | Ok () -> printfn "Deleted %s" "file.ext"
+    | Error ex -> printfn "Delete failed: %s" ex.Message
+
+let tempFile =
+    match invoke Path.GetTempFileName with
+    | Ok path -> path
+    | Error ex -> failwith ex.Message
+
+let fullPath =
+    match invoke Path.GetFullPath "file.ext" with
+    | Ok path -> path
+    | Error ex -> failwith ex.Message
+
+let combined =
+    match invoke2 Path.Combine "folder" "file.ext" with
+    | Ok path -> path
+    | Error ex -> failwith ex.Message
+```
+
+### Direct invocation when exceptions are not a concern
+
+```fsharp
+open System.IO
+open FInvoke.Object
+
+let tempFile = invoke Path.GetTempFileName
+let fullPath = invoke Path.GetFullPath "file.ext"
+let combined = invoke2 Path.Combine "folder" "file.ext"
+
+let result: unit = invoke File.Delete "file.ext"
+```
+
+## Supported helpers
+
+The library exposes `invoke` and `invokeN` functions for a range of arities:
+
+- `invoke`
+- `invoke2` ... `invoke16`
+
+For example:
+
 ```fsharp
 open FInvoke.Result
+
+let r1 = invoke Console.WriteLine "hello"
+let r2 = invoke2 Path.Combine "folder" "file.txt"
+let r3 = invoke3 Path.Combine "root" "folder" "file.txt"
 ```
-Wrapping methods with ```void``` as a return type:
-```fsharp
-let deleteFile: string -> Result<unit, Exception> = invoke File.Delete
 
-let test () =
-    match deleteFile "file.ext" with
-    | Ok result -> result
-    | Error error -> Debug.Fail(error.Message)
-```
-Wrapping methods without arguments:
-```fsharp
-let getRandomFileName: unit -> Result<string, Exception> = invoke Path.GetRandomFileName
+## License
 
-let test () =
-    match getRandomFileName () with
-    | Ok name -> Debug.Assert(name.Contains("."))
-    | Error error -> Debug.Fail(error.Message)
-```
-Wrapping methods with one argument:
-```fsharp
-let getFileName: string -> Result<string, Exception> = invoke Path.GetFileName
-
-let test () =
-    match getFileName @"root\file.ext" with
-    | Ok name -> Debug.Assert("file.ext" = name)
-    | Error error -> Debug.Fail(error.Message)
-```
-Wrapping methods with two arguments:
-```fsharp
-let combine2: string -> string -> Result<string, Exception> = invoke2 Path.Combine
-
-let test () =
-    match combine2 "root" "file.ext" with
-    | Ok name -> Debug.Assert(@"root\file.ext" = name)
-    | Error error -> Debug.Fail(error.Message)
-```
-Wrapping methods with three arguments:
-```fsharp
-let combine3: string -> string -> string -> Result<string, Exception> = invoke3 Path.Combine
-
-let test () =
-    match combine3 "root" "folder" "file.ext" with
-    | Ok name -> Debug.Assert(@"root\folder\file.ext" = name)
-    | Error error -> Debug.Fail(error.Message)
-```
-And so on...
-
-## Wrapping methods which don't throw an Exception, or you don't care.
-Import ```FInvoke.Object``` module.
-```fsharp
-open FInvoke.Object
-```
-Wrapping methods with ```void``` as a return type:
-```fsharp
-let deleteFile: string -> unit = invoke File.Delete
-
-let result = deleteFile "file.ext"
-
-Debug.Assert(() = result)
-```
-Wrapping methods without arguments:
-```fsharp
-let getRandomFileName: unit -> string = invoke Path.GetRandomFileName
-
-let name = getRandomFileName ()
-
-Debug.Assert(name.Contains("."))
-```
-Wrapping methods with one argument:
-```fsharp
-let getFileName: string -> string = invoke Path.GetFileName
-
-let name = getFileName @"root\file.ext"
-
-Debug.Assert("file.ext" = name)
-```
-Wrapping methods with two arguments:
-```fsharp
-let combine2: string -> string -> string = invoke2 Path.Combine
-
-let name = combine2 "root" "file.ext"
-
-Debug.Assert(@"root\file.ext" = name)
-```
-Wrapping methods with three arguments:
-```fsharp
-let combine3: string -> string -> string -> string = invoke3 Path.Combine
-
-let name = combine3 "root" "folder" "file.ext"
-
-Debug.Assert(@"root\folder\file.ext" = name)
-```
-And so on...
+This project is licensed under the [MIT License](LICENSE).
