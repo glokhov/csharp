@@ -6,6 +6,6 @@
 bin
 obj
 
-test-results
-
 *.user
+
+TestResults
